@@ -28,15 +28,9 @@ int main()
 
     ret= poll(pfds, 1, 3000);
     if (ret > 0) {
-        if (pfds[0].revents != 0) {
-            RACE= 0;
-            RADIO= 1;
-        }
-        else {
-            RADIO= 1;
-            RACE= 0;
-        }
-
+        RACE= (pfds[0].revents != 0) ? 0 : 1;
+        RADIO= !RACE;
+        
         for (;;) {
             res= read(pfds[RACE].fd, buf, sizeof(buf)); // make this into read until new line
             write(pfds[RADIO].fd, buf, sizeof(buf));
